@@ -1,0 +1,10 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1024" height="1024" fill="white"/>
+  <path d="M430 354V263C430 176 594 176 594 263V354" stroke="#fd651e" stroke-width="48" stroke-linecap="square"/>
+  <path d="M327 354H697L735 481C718 545 673 552 629 552C585 552 555 530 512 530C469 530 439 552 395 552C351 552 306 545 289 481L327 354Z" stroke="#1e40af" stroke-width="48" stroke-linejoin="round"/>
+  <path d="M395 552L379 706H645L629 552" stroke="#1e40af" stroke-width="48" stroke-linejoin="round"/>
+  <path d="M328 480H696" stroke="#1e40af" stroke-width="48" stroke-linecap="round"/>
+  <path d="M455 354L426 480" stroke="#1e40af" stroke-width="48" stroke-linecap="round"/>
+  <path d="M569 354L598 480" stroke="#1e40af" stroke-width="48" stroke-linecap="round"/>
+  <text x="512" y="865" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="128" font-weight="800" fill="#1e40af">EtuVendo</text>
+</svg>
