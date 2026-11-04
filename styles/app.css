@@ -531,6 +531,15 @@ body { font-size: 15px; }
 .password-field .input { padding-right: 48px; }
 .password-toggle { position: absolute; top: 50%; right: 12px; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 9px; color: #68728a; background: transparent; cursor: pointer; transform: translateY(-50%); }
 .password-toggle:hover, .password-toggle:focus-visible { color: #2446b8; background: #eef2ff; outline: none; }
+.operation-progress { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; padding: 20px; background: rgba(16, 27, 65, .28); backdrop-filter: blur(3px); }
+.operation-progress-card { width: min(360px, 100%); padding: 24px 22px 18px; border: 1px solid rgba(36, 70, 184, .12); border-radius: 20px; background: #fff; box-shadow: 0 20px 60px rgba(28, 42, 92, .22); text-align: center; color: #14234b; }
+.operation-progress-card strong { display: block; margin: 10px 0 16px; font-size: 15px; }
+.operation-progress-card small { display: block; margin-top: 8px; color: #68728a; font-weight: 700; }
+.operation-spinner { width: 30px; height: 30px; margin: 0 auto; border: 3px solid #e7ecff; border-top-color: #2446b8; border-radius: 50%; animation: operation-spin .8s linear infinite; }
+.progress-track { height: 8px; overflow: hidden; border-radius: 999px; background: #edf0f8; }
+.progress-track span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #2446b8, #ff6b2c); transition: width .2s ease; }
+button:disabled, input:disabled, textarea:disabled, select:disabled { cursor: not-allowed; opacity: .65; }
+@keyframes operation-spin { to { transform: rotate(360deg); } }
 .admin-sidebar { box-shadow: 8px 0 28px rgba(16,27,61,.12); }
 .admin-brand { letter-spacing: -.02em; }
 .admin-menu-toggle, .admin-close-menu { border: 0; cursor: pointer; }
