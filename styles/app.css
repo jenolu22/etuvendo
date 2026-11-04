@@ -527,6 +527,10 @@ body { font-size: 15px; }
 @media (max-width: 600px) { .admin-toolbar { flex-wrap: wrap; }.admin-search { flex-basis: 100%; }.admin-action { flex: 1; }.admin-table-row { gap: 7px; }.admin-table-row small { font-size: 11px; } }
 
 /* Administration : navigation compacte et hamburger mobile */
+.password-field { position: relative; }
+.password-field .input { padding-right: 48px; }
+.password-toggle { position: absolute; top: 50%; right: 12px; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 9px; color: #68728a; background: transparent; cursor: pointer; transform: translateY(-50%); }
+.password-toggle:hover, .password-toggle:focus-visible { color: #2446b8; background: #eef2ff; outline: none; }
 .admin-sidebar { box-shadow: 8px 0 28px rgba(16,27,61,.12); }
 .admin-brand { letter-spacing: -.02em; }
 .admin-menu-toggle, .admin-close-menu { border: 0; cursor: pointer; }
