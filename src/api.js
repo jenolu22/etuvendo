@@ -27,10 +27,13 @@ export async function api(path, options = {}) {
     const data = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.open(options.method || 'POST', API_BASE + path);
-      Object.entries(headers).forEach(([key, value]) => xhr.setRequestHeader(key, value));
+      xhr.setRequestHeader('Accept', 'application/json');
+      const authToken = getToken();
+      if (authToken) xhr.setRequestHeader('Authorization', 'Bearer ' + authToken);
+      xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       xhr.upload.onprogress = event => { if (event.lengthComputable) progressCallback(Math.round((event.loaded / event.total) * 100)); };
       xhr.onerror = () => reject(new Error('Connexion impossible avec le serveur. Vérifie ta connexion internet.'));
-      xhr.onload = () => { let parsed = null; try { parsed = xhr.responseText ? JSON.parse(xhr.responseText) : null; } catch { parsed = null; } if (xhr.status < 200 || xhr.status >= 300) reject(new Error(errorText(parsed, xhr.status))); else resolve(parsed); };
+      xhr.onload = () => { let parsed = null; try { parsed = xhr.responseText ? JSON.parse(xhr.responseText) : null; } catch { parsed = null; } if (xhr.status < 200 || xhr.status >= 300) reject(new Error(xhr.status === 401 ? 'Ta session a expiré. Reconnecte-toi avant de publier.' : errorText(parsed, xhr.status))); else resolve(parsed); };
       xhr.send(body);
     });
     return data;
