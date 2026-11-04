@@ -31,8 +31,9 @@ export async function api(path, options = {}) {
   let body = options.body;
   if (body && !(body instanceof FormData)) { headers['Content-Type'] = 'application/json'; body = JSON.stringify(body); }
   const progressCallback = options.onProgress || window.__etuvendoProgress;
-  const updateLoading = startLoading(body instanceof FormData ? 'Envoi en cours…' : 'Veuillez patienter…');
-  if (!(body instanceof FormData)) updateLoading();
+  const showLoading = body instanceof FormData || /^\/auth\/(connexion|inscription)/.test(path);
+  const updateLoading = showLoading ? startLoading(body instanceof FormData ? 'Envoi en cours…' : 'Veuillez patienter…') : () => {};
+  if (showLoading && !(body instanceof FormData)) updateLoading();
   if (body instanceof FormData && progressCallback) {
     let data;
     try { data = await new Promise((resolve, reject) => {
@@ -46,7 +47,7 @@ export async function api(path, options = {}) {
       xhr.onerror = () => reject(new Error('Connexion impossible avec le serveur. Vérifie ta connexion internet.'));
       xhr.onload = () => { let parsed = null; try { parsed = xhr.responseText ? JSON.parse(xhr.responseText) : null; } catch { parsed = null; } if (xhr.status < 200 || xhr.status >= 300) reject(new Error(xhr.status === 401 ? 'Ta session a expiré. Reconnecte-toi avant de publier.' : errorText(parsed, xhr.status))); else resolve(parsed); };
       xhr.send(body);
-      }); } finally { stopLoading(); }
+      }); } finally { if (showLoading) stopLoading(); }
     return data;
   }
   try {
@@ -54,5 +55,5 @@ export async function api(path, options = {}) {
     const text = await response.text(); let data = null; try { data = text ? JSON.parse(text) : null; } catch { data = null; }
     if (!response.ok) throw new Error(errorText(data, response.status));
     return data;
-  } finally { stopLoading(); }
+  } finally { if (showLoading) stopLoading(); }
 }
