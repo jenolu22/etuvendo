@@ -6,6 +6,14 @@ export const getToken = () => localStorage.getItem('etuvendo_token');
 export const getUser = () => { try { return JSON.parse(localStorage.getItem('etuvendo_user') || 'null'); } catch { return null; } };
 export const setSession = p => { localStorage.setItem('etuvendo_token', p.token); localStorage.setItem('etuvendo_user', JSON.stringify(p.utilisateur)); };
 export const clearSession = () => { localStorage.removeItem('etuvendo_token'); localStorage.removeItem('etuvendo_user'); };
+let activeLoaders = 0;
+const loadingOverlay = () => {
+  let node = document.getElementById('etuvendo-global-loading');
+  if (!node) { node = document.createElement('div'); node.id = 'etuvendo-global-loading'; node.innerHTML = '<div class="global-loading-card"><div class="operation-spinner"></div><strong>Veuillez patienter…</strong><div class="progress-track"><span></span></div><small>Chargement en cours</small></div>'; document.body.appendChild(node); }
+  return node;
+};
+const startLoading = message => { activeLoaders += 1; const node = loadingOverlay(); node.querySelector('strong').textContent = message; return progress => { const bar = node.querySelector('.progress-track span'); if (progress != null) { bar.style.width = `${progress}%`; node.querySelector('small').textContent = `${progress}%`; } else { bar.classList.add('indeterminate'); } }; };
+const stopLoading = () => { activeLoaders = Math.max(0, activeLoaders - 1); if (!activeLoaders) document.getElementById('etuvendo-global-loading')?.remove(); };
 const errorText = (data, status) => {
   const raw = data?.errors ? Object.values(data.errors).flat()[0] : (data?.message || data?.erreur || 'Erreur API EtuVendo');
   const text = String(raw).toLowerCase();
@@ -23,23 +31,28 @@ export async function api(path, options = {}) {
   let body = options.body;
   if (body && !(body instanceof FormData)) { headers['Content-Type'] = 'application/json'; body = JSON.stringify(body); }
   const progressCallback = options.onProgress || window.__etuvendoProgress;
+  const updateLoading = startLoading(body instanceof FormData ? 'Envoi en cours…' : 'Veuillez patienter…');
+  if (!(body instanceof FormData)) updateLoading();
   if (body instanceof FormData && progressCallback) {
-    const data = await new Promise((resolve, reject) => {
+    let data;
+    try { data = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.open(options.method || 'POST', API_BASE + path);
       xhr.setRequestHeader('Accept', 'application/json');
       const authToken = getToken();
       if (authToken) xhr.setRequestHeader('Authorization', 'Bearer ' + authToken);
       xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-      xhr.upload.onprogress = event => { if (event.lengthComputable) progressCallback(Math.round((event.loaded / event.total) * 100)); };
+      xhr.upload.onprogress = event => { if (event.lengthComputable) { const percent = Math.round((event.loaded / event.total) * 100); progressCallback(percent); updateLoading(percent); } };
       xhr.onerror = () => reject(new Error('Connexion impossible avec le serveur. Vérifie ta connexion internet.'));
       xhr.onload = () => { let parsed = null; try { parsed = xhr.responseText ? JSON.parse(xhr.responseText) : null; } catch { parsed = null; } if (xhr.status < 200 || xhr.status >= 300) reject(new Error(xhr.status === 401 ? 'Ta session a expiré. Reconnecte-toi avant de publier.' : errorText(parsed, xhr.status))); else resolve(parsed); };
       xhr.send(body);
-    });
+      }); } finally { stopLoading(); }
     return data;
   }
-  const response = await fetch(API_BASE + path, { ...options, headers, body });
-  const text = await response.text(); let data = null; try { data = text ? JSON.parse(text) : null; } catch { data = null; }
-  if (!response.ok) throw new Error(errorText(data, response.status));
-  return data;
+  try {
+    const response = await fetch(API_BASE + path, { ...options, headers, body });
+    const text = await response.text(); let data = null; try { data = text ? JSON.parse(text) : null; } catch { data = null; }
+    if (!response.ok) throw new Error(errorText(data, response.status));
+    return data;
+  } finally { stopLoading(); }
 }
