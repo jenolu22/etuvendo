@@ -552,7 +552,23 @@ button:disabled, input:disabled, textarea:disabled, select:disabled { cursor: no
 .otp-copy-row { display: flex; gap: 8px; align-items: stretch; }
 .otp-copy-row .otp-input { flex: 1; min-width: 0; }
 .otp-copy-btn { flex: 0 0 auto; min-width: 84px; }
+.otp-card { position: relative; text-align: center; }
+.otp-back { position: absolute; top: 18px; left: 18px; border: 0; background: transparent; color: var(--ink); font-size: 25px; cursor: pointer; }
+.otp-brand img { width: 58px; height: 58px; object-fit: contain; margin-bottom: 8px; }
+.otp-card h1 { font-size: 25px; }
+.otp-boxes { display: flex; justify-content: center; gap: 10px; margin: 14px 0 8px; }
+.otp-box { width: 46px; height: 54px; padding: 0; border: 1.5px solid #c8cce0; border-radius: 10px; background: #fbfcff; color: var(--ink); text-align: center; font-size: 24px; font-weight: 800; outline: none; transition: border-color .18s, background .18s, box-shadow .18s; }
+.otp-box:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(36,70,184,.12); }
+.otp-box.success { border-color: #25a56a; background: #eafaf1; color: #16814e; }
+.otp-box.error { border-color: #dc4b56; background: #fff0f1; color: #c52d3a; animation: otp-shake .25s linear; }
+.otp-copy-link { margin: 0 auto 8px; font-size: 13px; }
+.otp-verify-btn { width: 100%; min-height: 46px; }
+.otp-feedback { min-height: 20px; margin: 8px 0 0; font-size: 13px; color: var(--muted); }
+.otp-feedback.success { color: #16814e; font-weight: 700; }
+.otp-feedback.error { color: #c52d3a; font-weight: 700; }
+@keyframes otp-shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 @media (max-width: 420px) { .otp-copy-row { gap: 6px; } .otp-copy-btn { min-width: 76px; padding-left: 10px; padding-right: 10px; } }
+@media (max-width: 420px) { .otp-boxes { gap: 7px; } .otp-box { width: 41px; height: 50px; } }
 .admin-sidebar { box-shadow: 8px 0 28px rgba(16,27,61,.12); }
 .admin-brand { letter-spacing: -.02em; }
 .admin-menu-toggle, .admin-close-menu { border: 0; cursor: pointer; }
