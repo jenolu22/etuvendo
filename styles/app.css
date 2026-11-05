@@ -549,6 +549,10 @@ button:disabled, input:disabled, textarea:disabled, select:disabled { cursor: no
 .detail-media { min-height: clamp(360px, 52vw, 620px); overflow: hidden; position: relative; }
 .detail-media .product-photo { object-fit: contain; background: #f7f8fc; }
 .detail-card > .btn-primary, .detail-card .seller-row + .btn-primary { min-height: 48px; width: 100%; font-size: 15px; }
+.otp-copy-row { display: flex; gap: 8px; align-items: stretch; }
+.otp-copy-row .otp-input { flex: 1; min-width: 0; }
+.otp-copy-btn { flex: 0 0 auto; min-width: 84px; }
+@media (max-width: 420px) { .otp-copy-row { gap: 6px; } .otp-copy-btn { min-width: 76px; padding-left: 10px; padding-right: 10px; } }
 .admin-sidebar { box-shadow: 8px 0 28px rgba(16,27,61,.12); }
 .admin-brand { letter-spacing: -.02em; }
 .admin-menu-toggle, .admin-close-menu { border: 0; cursor: pointer; }
