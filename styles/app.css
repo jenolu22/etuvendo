@@ -435,16 +435,28 @@ label { font-weight: 800; font-size: 13px; }
 .onboarding-auth {
   display: flex;
   flex-wrap: wrap;
-  gap: 18px;
+  gap: 10px;
 }
 
 .onboarding-auth button {
-  padding: 0;
-  border: 0;
-  color: rgba(255, 255, 255, .88);
-  background: transparent;
-  font: 600 14px var(--font-body);
+  min-height: 38px;
+  padding: 9px 14px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  font: 700 13px var(--font-body);
   cursor: pointer;
+}
+
+.onboarding-login {
+  color: #fff;
+  background: rgba(35, 70, 184, .78);
+  border-color: rgba(255, 255, 255, .3) !important;
+}
+
+.onboarding-register {
+  color: #fff;
+  background: var(--accent);
+  box-shadow: 0 8px 20px rgba(255, 99, 31, .25);
 }
 
 @media (max-width: 520px) {
