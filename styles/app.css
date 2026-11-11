@@ -877,3 +877,54 @@ button:disabled, input:disabled, textarea:disabled, select:disabled { cursor: no
   .admin-columns { gap: 12px; margin-top: 14px; }
   .admin-panel { padding: 15px; border-radius: 15px; }
 }
+
+/* Espacement et bannière pleine largeur sur les écrans mobiles */
+.app-layout {
+  padding-top: 88px;
+}
+
+.form.panel,
+.detail-card .form,
+.listing-editor {
+  padding: clamp(18px, 4vw, 28px);
+  border-radius: 22px;
+  background: linear-gradient(180deg, #fff 0%, #f8f9ff 100%);
+}
+
+.form.panel .section-title,
+.listing-editor h3 {
+  margin-top: 0;
+}
+
+.form .input,
+.form .textarea,
+.form .select {
+  min-height: 54px;
+  border-radius: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.form .textarea {
+  padding-top: 15px;
+}
+
+@media (max-width: 759px) {
+  .hero-panel {
+    margin-left: -16px;
+    margin-right: -16px;
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  }
+}
+
+@media (max-width: 420px) {
+  .app-layout {
+    padding-top: 88px;
+  }
+
+  .hero-panel {
+    margin-left: -10px;
+    margin-right: -10px;
+    border-radius: 0 0 22px 22px;
+  }
+}
