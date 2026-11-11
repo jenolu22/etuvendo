@@ -214,6 +214,22 @@ label { font-weight: 800; font-size: 13px; }
   .auth-card h1 { font-size: 25px; }
   .bottom-nav { height: 68px; }
 }
+
+@media (max-width: 759px) {
+  .hero-panel {
+    margin-left: -16px;
+    margin-right: -16px;
+    border-radius: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero-panel {
+    margin-left: -10px;
+    margin-right: -10px;
+    border-radius: 0;
+  }
+}
 @media (min-width: 760px) {
   .topbar .brand { max-width: none; }
   .topbar .logo-img { width: 42px; height: 42px; }
