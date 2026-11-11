@@ -99,12 +99,18 @@
 .nav-post.active { color: white; background: var(--accent); }
 
 .auth-wrap { min-height: 100dvh; display: grid; place-items: center; padding: 20px; }
-.auth-card { width: min(440px, 100%); padding: 18px; border-radius: var(--radius-xl); background: var(--surface-lowest); box-shadow: var(--shadow-lg); border: 1px solid rgba(196,197,213,.7); }
+.auth-card { width: min(440px, 100%); padding: clamp(20px, 5vw, 30px); border-radius: var(--radius-xl); background: linear-gradient(180deg, #fff 0%, #f8f9ff 100%); box-shadow: var(--shadow-lg); border: 1px solid rgba(196,197,213,.7); }
 .auth-card h1 { font-size: 28px; }
 .auth-card p { color: var(--muted); }
+.auth-intro { margin: -5px 0 4px; font-size: 14px; line-height: 1.45; }
+.form-error { padding: 11px 13px; border-radius: 13px; color: #b42318; background: #ffe1de; border: 1px solid #ffc4bd; font-size: 13px; font-weight: 800; line-height: 1.35; }
 .form { display: grid; gap: 12px; }
 .form-row { display: grid; gap: 6px; }
 label { font-weight: 800; font-size: 13px; }
+.form .input, .form .textarea, .form .select, .admin-modal .input, .admin-auth-card .input { background: #edf2fc; border-color: transparent; box-shadow: none; }
+.form .input:hover, .form .textarea:hover, .form .select:hover { background: #e8eefb; }
+.form .input:focus, .form .textarea:focus, .form .select:focus { background: #fff; }
+.auth-submit { width: 100%; margin-top: 4px; }
 .switch-auth { margin-top: 14px; text-align: center; color: var(--muted); }
 .link-btn { border: 0; background: transparent; color: var(--primary); font-weight: 900; padding: 0; }
 

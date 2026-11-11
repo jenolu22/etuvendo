@@ -1,6 +1,10 @@
 const apiHost = ['localhost', '127.0.0.1', ''].includes(window.location.hostname) ? '127.0.0.1' : window.location.hostname;
 const localApi = 'http://' + apiHost + ':8000/api';
-const configuredApi = (import.meta.env.VITE_API_URL || localStorage.getItem('etuvendo_api_base') || localApi).replace(/\/$/, '');
+const productionApi = 'https://etuvendo-backend.onrender.com/api';
+const environmentApi = import.meta.env.VITE_API_URL;
+const savedApi = localStorage.getItem('etuvendo_api_base');
+const defaultApi = ['localhost', '127.0.0.1'].includes(window.location.hostname) ? localApi : productionApi;
+const configuredApi = ((environmentApi && !environmentApi.includes('api-votre-compte') ? environmentApi : '') || savedApi || defaultApi).replace(/\/$/, '');
 export const API_BASE = configuredApi.endsWith('/api') ? configuredApi : configuredApi + '/api';
 export const getToken = () => localStorage.getItem('etuvendo_token');
 export const getUser = () => { try { return JSON.parse(localStorage.getItem('etuvendo_user') || 'null'); } catch { return null; } };
