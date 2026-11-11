@@ -979,6 +979,27 @@ button:disabled, input:disabled, textarea:disabled, select:disabled { cursor: no
   font-size: 12px;
 }
 
+.profile-email {
+  position: relative;
+  z-index: 2;
+  margin: -15px 0 20px;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.profile-actions {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  gap: 8px;
+  max-width: 360px;
+  margin: 0 auto 16px;
+}
+
+.profile-actions .btn { width: 100%; min-height: 44px; }
+.profile-password-button { color: var(--primary); background: var(--primary-soft); }
+
 .profile-color-wave {
   position: absolute;
   left: -8%;
@@ -1043,6 +1064,46 @@ button:disabled, input:disabled, textarea:disabled, select:disabled { cursor: no
 .profile-page > .profile-page > .profile-hero {
   display: none;
 }
+
+.profile-page > .profile-page > .profile-content > .form.panel {
+  display: none;
+}
+
+.profile-screen {
+  width: min(620px, 100%);
+  margin: 0 auto;
+}
+
+.profile-back {
+  margin: 0 0 14px;
+  padding: 0;
+  border: 0;
+  color: var(--primary);
+  background: transparent;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.profile-edit-card {
+  padding: clamp(20px, 5vw, 32px);
+  border-radius: 26px;
+  background: linear-gradient(180deg, #fff 0%, #f7f9ff 100%);
+  border: 1px solid rgba(196, 197, 213, .7);
+  box-shadow: var(--shadow-lg);
+}
+
+.profile-screen-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.profile-screen-heading h1 { margin: 0; font: 800 26px var(--font-title); }
+.profile-screen-heading p { margin: 5px 0 0; color: var(--muted); font-size: 13px; line-height: 1.4; }
+.profile-screen-icon { display: grid; place-items: center; width: 42px; height: 42px; flex: 0 0 auto; border-radius: 14px; color: #fff; background: linear-gradient(135deg, var(--primary), var(--accent)); }
+.profile-edit-avatar { display: grid; justify-items: center; gap: 8px; margin: 18px 0 8px; color: var(--muted); font-size: 12px; text-align: center; }
+.profile-edit-avatar .avatar-control .avatar, .profile-edit-avatar .avatar-control .avatar-img { width: 92px; height: 92px; }
 
 @media (max-width: 520px) {
   .profile-card { border-radius: 24px; }
