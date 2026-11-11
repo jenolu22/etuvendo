@@ -1,0 +1,16 @@
+{
+  "id": "/",
+  "name": "EtuVendo — Marché étudiant",
+  "short_name": "EtuVendo",
+  "description": "Achète, vends et échange avec les étudiants de ton campus.",
+  "lang": "fr-CD",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8f7ff",
+  "theme_color": "#2445b8",
+  "icons": [
+    { "src": "/assets/logo-etuvendo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
