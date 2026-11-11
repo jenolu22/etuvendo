@@ -878,6 +878,177 @@ button:disabled, input:disabled, textarea:disabled, select:disabled { cursor: no
   .admin-panel { padding: 15px; border-radius: 15px; }
 }
 
+/* Carte profil inspirée du modèle, adaptée aux couleurs EtuVendo */
+.profile-card {
+  position: relative;
+  width: min(100%, 560px);
+  margin: 0 auto;
+  padding: 20px 18px 0;
+  overflow: hidden;
+  text-align: center;
+  background: #fff;
+  border-radius: 28px;
+}
+
+.profile-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 28px;
+  color: var(--primary);
+}
+
+.profile-card-label {
+  font: 800 14px var(--font-title);
+  letter-spacing: .02em;
+}
+
+.profile-menu-button {
+  display: grid;
+  gap: 4px;
+  width: 32px;
+  padding: 7px 5px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.profile-menu-button span {
+  display: block;
+  width: 19px;
+  height: 2px;
+  border-radius: 9px;
+  background: var(--text);
+}
+
+.profile-avatar-wrap {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  margin: 18px auto 8px;
+}
+
+.avatar-control {
+  position: relative;
+  display: inline-grid;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.avatar-control .avatar,
+.avatar-control .avatar-img {
+  width: 88px;
+  height: 88px;
+  border: 4px solid #fff;
+  box-shadow: 0 8px 20px rgba(30, 64, 175, .2);
+  font-size: 25px;
+}
+
+.avatar-pencil {
+  position: absolute;
+  right: -2px;
+  bottom: 3px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 3px solid #fff;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--accent);
+  box-shadow: var(--shadow-sm);
+}
+
+.profile-card > h1 {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  font: 800 23px var(--font-title);
+  color: var(--text);
+}
+
+.profile-role {
+  position: relative;
+  z-index: 2;
+  margin: 4px 0 24px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.profile-color-wave {
+  position: absolute;
+  left: -8%;
+  right: -8%;
+  top: 162px;
+  height: 74px;
+  z-index: 1;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  transform: rotate(-2deg);
+  opacity: .98;
+}
+
+.profile-stats {
+  position: relative;
+  z-index: 2;
+  max-width: 360px;
+  margin: 0 auto 16px;
+}
+
+.profile-shortcuts {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 2px;
+  margin: 0 -18px;
+  padding: 12px 18px 16px;
+  text-align: left;
+  background: rgba(248, 249, 255, .96);
+}
+
+.profile-shortcuts button {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-height: 45px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 12px;
+  color: var(--muted);
+  background: transparent;
+  font: 700 13px var(--font-body);
+  text-align: left;
+  cursor: pointer;
+}
+
+.profile-shortcuts button.active,
+.profile-shortcuts button:hover {
+  color: var(--primary);
+  background: var(--primary-soft);
+}
+
+.profile-saving {
+  position: relative;
+  z-index: 3;
+  margin: 0 0 10px;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.profile-page > .profile-page > .profile-hero {
+  display: none;
+}
+
+@media (max-width: 520px) {
+  .profile-card { border-radius: 24px; }
+  .profile-color-wave { top: 160px; }
+}
+
 /* Espacement et bannière pleine largeur sur les écrans mobiles */
 .app-layout {
   padding-top: 88px;
