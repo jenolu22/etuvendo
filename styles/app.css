@@ -1013,6 +1013,60 @@ button:disabled, input:disabled, textarea:disabled, select:disabled { cursor: no
   opacity: .98;
 }
 
+.profile-menu-button,
+.profile-color-wave {
+  display: none;
+}
+
+.hamburger-btn {
+  display: inline-flex;
+}
+
+.mobile-menu-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(15, 23, 42, .42);
+  animation: menu-fade-in .18s ease both;
+}
+
+.mobile-menu {
+  width: min(330px, 86vw);
+  height: 100%;
+  padding: max(18px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom));
+  background: #fff;
+  box-shadow: 12px 0 30px rgba(15, 23, 42, .2);
+  animation: menu-slide-in .22s ease both;
+}
+
+.mobile-menu-head,
+.mobile-menu-user,
+.mobile-menu nav button {
+  display: flex;
+  align-items: center;
+}
+
+.mobile-menu-head {
+  justify-content: space-between;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #edf0f7;
+}
+
+.mobile-menu-brand { display: flex; align-items: center; gap: 9px; color: var(--primary); font: 800 18px var(--font-title); }
+.mobile-menu-brand img { width: 38px; height: 38px; border-radius: 11px; }
+.mobile-menu-close { display: grid; place-items: center; width: 38px; height: 38px; border: 0; border-radius: 12px; color: var(--muted); background: var(--surface-low); cursor: pointer; }
+.mobile-menu-user { gap: 11px; padding: 22px 8px; }
+.mobile-menu-user div { display: grid; gap: 3px; min-width: 0; }
+.mobile-menu-user strong { color: var(--text); font-size: 14px; }
+.mobile-menu-user small { overflow: hidden; color: var(--muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.mobile-menu nav { display: grid; gap: 5px; }
+.mobile-menu nav button { gap: 13px; width: 100%; min-height: 48px; padding: 0 13px; border: 0; border-radius: 13px; color: var(--muted); background: transparent; font: 800 14px var(--font-body); text-align: left; cursor: pointer; }
+.mobile-menu nav button:hover { color: var(--primary); background: var(--primary-soft); }
+.mobile-menu nav button .icon { width: 19px; height: 19px; }
+.mobile-menu nav button b { margin-left: auto; min-width: 22px; padding: 3px 6px; border-radius: 999px; color: #fff; background: var(--accent); font-size: 11px; text-align: center; }
+@keyframes menu-slide-in { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes menu-fade-in { from { opacity: 0; } to { opacity: 1; } }
+
 .profile-stats {
   position: relative;
   z-index: 2;
