@@ -416,14 +416,14 @@ label { font-weight: 800; font-size: 13px; }
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  width: min(100%, 330px);
+  width: min(100%, 220px);
   margin-top: 8px;
-  padding: 14px 17px;
+  padding: 10px 14px;
   border: 0;
-  border-radius: 15px;
+  border-radius: 12px;
   color: #fff;
   background: var(--accent);
-  font: 700 16px var(--font-body);
+  font: 700 14px var(--font-body);
   cursor: pointer;
   box-shadow: 0 10px 30px rgba(0, 0, 0, .18);
 }
@@ -462,7 +462,7 @@ label { font-weight: 800; font-size: 13px; }
   }
 
   .onboarding-next {
-    width: 100%;
+    width: min(100%, 210px);
   }
 }
 

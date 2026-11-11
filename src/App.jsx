@@ -90,15 +90,15 @@ function Notifications({ go, toast }) {
   return <><div className="section-title"><h2>Notifications</h2><p>{groups.length ? 'Tes nouveaux messages regroupés par correspondant.' : 'Tu es à jour.'}</p></div><div className="stack">{groups.length ? groups.map(group => <button className="notification-row clickable" key={group.sender} onClick={open}><span className="status-dot" /><div><strong>{group.count > 1 ? `Vous avez ${group.count} messages de ${group.sender}` : `Nouveau message de ${group.sender}`}</strong><div className="meta">{group.latest.contenu}</div></div><Icon type="chat" /></button>) : <div className="empty panel">Aucune notification.</div>}</div></>;
 }
 function Landing({ go }) {
-  const fallbackSlides = [
-    { image: '/assets/products/calculus.svg', title: 'Trouve ce qu’il te faut.', text: 'Manuels, ordinateurs, accessoires et objets utiles : découvre les offres de ton campus.', action: 'Continuer' },
-    { image: '/assets/products/headphones.svg', title: 'Achète auprès d’étudiants.', text: 'Vois le produit, consulte le profil et échange directement avant de conclure.', action: 'Continuer' },
-    { image: '/assets/products/chemistry.svg', title: 'Vends en quelques secondes.', text: 'Ajoute une photo, un prix et publie ton annonce auprès de ta communauté.', action: 'Créer mon compte' },
+  const slides = [
+    { image: '/assets/onboarding-products/product-1.jpg', title: 'Trouve ce qu’il te faut.', text: 'Manuels, ordinateurs, accessoires et objets utiles : découvre les offres de ton campus.', action: 'Continuer' },
+    { image: '/assets/onboarding-products/product-2.jpg', title: 'Étudie mieux, dépense moins.', text: 'Des livres et du matériel étudiant disponibles près de toi, au bon moment.', action: 'Continuer' },
+    { image: '/assets/onboarding-products/product-3.jpg', title: 'Achète auprès d’étudiants.', text: 'Vois le produit, consulte le profil et échange directement avant de conclure.', action: 'Continuer' },
+    { image: '/assets/onboarding-products/product-4.jpg', title: 'Tout ton campus au même endroit.', text: 'Tech, sacs et accessoires : compare les annonces et trouve ton prochain bon plan.', action: 'Continuer' },
+    { image: '/assets/onboarding-products/product-5.jpg', title: 'Vends en quelques secondes.', text: 'Ajoute une photo, un prix et publie ton article auprès de ta communauté.', action: 'Créer mon compte' },
   ];
-  const [slides, setSlides] = useState(fallbackSlides);
   const [slide, setSlide] = useState(0);
   const touchStart = useRef(0);
-  useEffect(() => { api('/annonces').then(rows => { const photos = (Array.isArray(rows) ? rows : []).flatMap(item => (item.photos || []).slice(0, 1)).filter(Boolean).slice(0, 4); if (photos.length) { setSlides(photos.map((image, index) => ({ image, title: ['Les offres de ton campus.', 'Des produits en photo.', 'Des échanges simples.', 'Un marché proche de toi.'][index] || 'Ton campus, tes bonnes affaires.', text: 'Découvre les annonces publiées par les étudiants de ton université sur EtuVendo.', action: index === photos.length - 1 ? 'Créer mon compte' : 'Continuer' }))); setSlide(0); } }).catch(() => {}); }, []);
   useEffect(() => { const timer = setInterval(() => setSlide(value => (value + 1) % slides.length), 4500); return () => clearInterval(timer); }, [slides.length]);
   const current = slides[slide % slides.length];
   const next = () => slide < slides.length - 1 ? setSlide(value => value + 1) : go('register');
