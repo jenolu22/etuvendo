@@ -30,6 +30,9 @@ const errorText = (data, status) => {
   if (status >= 500) return 'Le serveur rencontre un problème. Réessaie dans un instant.';
   return raw;
 };
+const notifyExpiredSession = status => {
+  if (status === 401 && getToken()) window.dispatchEvent(new Event('etuvendo:session-expired'));
+};
 export async function api(path, options = {}) {
   const headers = { Accept: 'application/json', ...(options.headers || {}) };
   const token = getToken(); if (token) headers.Authorization = 'Bearer ' + token;
@@ -78,7 +81,7 @@ export async function api(path, options = {}) {
       xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       xhr.upload.onprogress = event => { if (event.lengthComputable) { const percent = Math.round((event.loaded / event.total) * 100); progressCallback(percent); updateLoading(percent); } };
       xhr.onerror = () => reject(new Error('Connexion impossible avec le serveur. Vérifie ta connexion internet.'));
-      xhr.onload = () => { let parsed = null; try { parsed = xhr.responseText ? JSON.parse(xhr.responseText) : null; } catch { parsed = null; } if (xhr.status < 200 || xhr.status >= 300) reject(new Error(xhr.status === 401 ? 'Ta session a expiré. Reconnecte-toi avant de publier.' : errorText(parsed, xhr.status))); else resolve(parsed); };
+      xhr.onload = () => { let parsed = null; try { parsed = xhr.responseText ? JSON.parse(xhr.responseText) : null; } catch { parsed = null; } if (xhr.status < 200 || xhr.status >= 300) { notifyExpiredSession(xhr.status); reject(new Error(xhr.status === 401 ? 'Ton compte a été supprimé ou ta session a expiré.' : errorText(parsed, xhr.status))); } else resolve(parsed); };
       xhr.send(body);
       }); } finally { if (showLoading) stopLoading(); }
     return data;
@@ -86,7 +89,7 @@ export async function api(path, options = {}) {
   try {
     const response = await fetch(API_BASE + path, { ...options, headers, body });
     const text = await response.text(); let data = null; try { data = text ? JSON.parse(text) : null; } catch { data = null; }
-    if (!response.ok) throw new Error(errorText(data, response.status));
+    if (!response.ok) { notifyExpiredSession(response.status); throw new Error(response.status === 401 ? 'Ton compte a été supprimé ou ta session a expiré.' : errorText(data, response.status)); }
     if (cacheable) { try { sessionStorage.setItem(cacheKey, JSON.stringify({ time: Date.now(), data })); } catch {} }
     return data;
   } finally { if (showLoading) stopLoading(); }
