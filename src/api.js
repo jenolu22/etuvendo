@@ -11,6 +11,7 @@ export const getUser = () => { try { return JSON.parse(localStorage.getItem('etu
 export const setSession = p => { localStorage.setItem('etuvendo_token', p.token); localStorage.setItem('etuvendo_user', JSON.stringify(p.utilisateur)); };
 export const clearSession = () => { localStorage.removeItem('etuvendo_token'); localStorage.removeItem('etuvendo_user'); };
 let activeLoaders = 0;
+const typingRequests = new Map();
 const loadingOverlay = () => {
   let node = document.getElementById('etuvendo-global-loading');
   if (!node) { node = document.createElement('div'); node.id = 'etuvendo-global-loading'; node.innerHTML = '<div class="global-loading-card"><div class="operation-spinner"></div><strong>Veuillez patienter…</strong><div class="progress-track"><span></span></div><small>Chargement en cours</small></div>'; document.body.appendChild(node); }
@@ -32,8 +33,36 @@ const errorText = (data, status) => {
 export async function api(path, options = {}) {
   const headers = { Accept: 'application/json', ...(options.headers || {}) };
   const token = getToken(); if (token) headers.Authorization = 'Bearer ' + token;
+  const method = (options.method || 'GET').toUpperCase();
+  const conversationCache = method === 'GET' && path.startsWith('/conversations/');
+  const cacheable = method === 'GET' && (path === '/institutions' || path === '/annonces' || path.startsWith('/annonces?') || conversationCache);
+  const cacheKey = 'etuvendo_cache:' + path;
+  const cacheTtl = conversationCache ? 2000 : 30000;
+  if (method !== 'GET' && path.startsWith('/conversations/')) {
+    try { Object.keys(sessionStorage).filter(key => key.startsWith('etuvendo_cache:/conversations/')).forEach(key => sessionStorage.removeItem(key)); } catch {}
+  }
+  if (cacheable) {
+    try {
+      const cached = JSON.parse(sessionStorage.getItem(cacheKey) || 'null');
+      if (cached && Date.now() - cached.time < cacheTtl) return cached.data;
+    } catch {}
+  }
   let body = options.body;
   if (body && !(body instanceof FormData)) { headers['Content-Type'] = 'application/json'; body = JSON.stringify(body); }
+  // La saisie dans le chat peut déclencher plusieurs événements par seconde.
+  // On garde au maximum un signal « en train d'écrire » toutes les 2 secondes.
+  if (path.endsWith('/typing') && body) {
+    try {
+      const payload = JSON.parse(body);
+      if (payload.ecrit === true) {
+        const last = typingRequests.get(path) || 0;
+        if (Date.now() - last < 2000) return { ok: true, ignore: true };
+        typingRequests.set(path, Date.now());
+      } else {
+        typingRequests.delete(path);
+      }
+    } catch {}
+  }
   const progressCallback = options.onProgress || window.__etuvendoProgress;
   const showLoading = body instanceof FormData || /^\/auth\/(connexion|inscription)/.test(path);
   const updateLoading = showLoading ? startLoading(body instanceof FormData ? 'Envoi en cours…' : 'Veuillez patienter…') : () => {};
@@ -58,6 +87,7 @@ export async function api(path, options = {}) {
     const response = await fetch(API_BASE + path, { ...options, headers, body });
     const text = await response.text(); let data = null; try { data = text ? JSON.parse(text) : null; } catch { data = null; }
     if (!response.ok) throw new Error(errorText(data, response.status));
+    if (cacheable) { try { sessionStorage.setItem(cacheKey, JSON.stringify({ time: Date.now(), data })); } catch {} }
     return data;
   } finally { if (showLoading) stopLoading(); }
 }
