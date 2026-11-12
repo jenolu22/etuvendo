@@ -23,7 +23,8 @@ const errorText = (data, status) => {
   const firstField = data?.errors ? Object.keys(data.errors)[0] : '';
   const raw = data?.message || data?.erreur || (firstField ? Object.values(data.errors).flat()[0] : 'Erreur API EtuVendo');
   const text = String(raw).toLowerCase();
-  if (data?.code === 'OTP_EMAIL_SEND_FAILED' || text.includes('envoyer le code') || text.includes('code de vérification')) return 'Ton compte n’a pas pu recevoir le code. Vérifie que ton adresse email est correcte, puis réessaie.';
+  if (data?.code === 'OTP_EMAIL_SEND_FAILED') return 'Ton adresse email a été acceptée, mais le service EtuVendo n’a pas réussi à envoyer le code. Ce n’est pas une erreur d’adresse. Réessaie dans quelques minutes ; si le problème continue, contacte l’administrateur.';
+  if (text.includes('envoyer le code') || text.includes('code de vérification')) return 'Le service EtuVendo n’a pas réussi à envoyer le code. Vérifie ta connexion et réessaie dans quelques minutes.';
   if (firstField === 'email' && (text.includes('already been taken') || text.includes('unique') || text.includes('déjà utilisé') || text.includes('has already'))) return 'Cette adresse email est déjà utilisée. Essaie de te connecter.';
   if (firstField === 'email' && (text.includes('valid') || text.includes('format'))) return 'Cette adresse email semble invalide. Vérifie son orthographe.';
   if (firstField === 'email' && (text.includes('required') || text.includes('obligatoire'))) return 'Saisis ton adresse email.';
