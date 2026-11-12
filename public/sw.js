@@ -38,7 +38,12 @@ self.addEventListener('fetch', event => {
   if (url.pathname.startsWith('/assets/') || url.pathname.endsWith('.js') || url.pathname.endsWith('.css') || url.pathname === '/manifest.webmanifest') {
     event.respondWith(caches.match(request).then(cached => {
       const update = fetch(request).then(response => {
-        if (response.ok) caches.open(CACHE_NAME).then(cache => cache.put(request, response.clone()));
+        if (response.ok) {
+          // Clone la réponse avant de la renvoyer : le navigateur peut
+          // commencer à consommer son flux dès qu'elle est retournée.
+          const copy = response.clone();
+          event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.put(request, copy)));
+        }
         return response;
       });
       return cached || update;
