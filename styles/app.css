@@ -1257,3 +1257,39 @@ button:disabled, input:disabled, textarea:disabled, select:disabled { cursor: no
     border-radius: 0 0 22px 22px;
   }
 }
+
+/* Mise en page bureau : espace utile, navigation lisible et contenu centré. */
+@media (min-width: 1200px) {
+  .app-layout { padding: 98px 44px 40px 128px; }
+  .view { max-width: 1360px; }
+  .topbar { left: 88px; min-height: 76px; padding: 10px 40px; }
+  .topbar .brand { max-width: none; gap: 14px; }
+  .topbar .logo-img { width: 48px; height: 48px; }
+  .brand-title strong { font-size: 18px; line-height: 21px; }
+  .brand-title span { font-size: 12px; }
+  .top-actions { gap: 12px; }
+  .icon-btn { width: 46px; min-height: 46px; }
+  .profile-chip-rich { max-width: 260px; padding: 6px 14px 6px 7px; }
+  .grid-list { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+  .listing-card { transition: transform .18s ease, box-shadow .18s ease; }
+  .listing-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .card-body { padding: 14px; gap: 9px; }
+  .toolbar { grid-template-columns: minmax(300px, 1fr) auto; align-items: center; gap: 20px; }
+  .filters { justify-content: flex-end; overflow: visible; }
+  .hero-panel { grid-template-columns: minmax(0, 1.4fr) minmax(280px, .8fr); gap: 40px; padding: 42px 48px; min-height: 360px; }
+  .hero-panel h1 { font-size: clamp(42px, 4vw, 58px); max-width: 720px; }
+  .hero-panel p { font-size: 18px; }
+  .hero-slideshow { min-height: 260px; }
+  .hero-slideshow img { width: min(260px, 100%); height: 230px; }
+  .auth-wrap { padding: 48px; }
+  .auth-card { width: min(500px, 100%); padding: 38px; }
+  .auth-card h1 { font-size: 32px; }
+  .profile-page { max-width: 1120px; margin: 0 auto; }
+  .admin-main { padding: 40px clamp(32px, 4vw, 72px); }
+}
+
+@media (min-width: 1600px) {
+  .app-layout { padding-left: 150px; padding-right: 64px; }
+  .view { max-width: 1500px; }
+  .grid-list { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px; }
+}
