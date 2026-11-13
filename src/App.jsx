@@ -35,6 +35,86 @@ function Home({ route, go, toast }) {
   useEffect(() => { const timer = setInterval(() => setSlide(value => (value + 1) % showcase.length), 10000); return () => clearInterval(timer); }, [showcase.length]);
   return <><div className="hero-panel"><div className="hero-copy"><span className="eyebrow"><Icon type="shield" size={15} /> Le marché de ton campus</span><h1>Achète, vends et échange simplement.</h1><p>Découvre les bons plans de ton université, avec des étudiants que tu peux contacter directement.</p><div className="hero-actions"><button className="btn btn-accent" onClick={() => go('new')}><Icon type="plus" /> Vendre un article</button><button className="btn btn-soft" onClick={() => go('notifications')}><Icon type="bell" /> Notifications</button></div></div><div className="hero-slideshow" aria-label="Découvre EtuVendo"><img src={showcase[slide]} alt="Produit EtuVendo" loading="lazy" /><div className="hero-dots">{showcase.map((_, index) => <span className={index === slide ? 'active' : ''} key={index} />)}</div></div></div><div className="toolbar"><div className="searchbox"><Icon type="search" /><input ref={searchRef} className="input" value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => e.key === 'Enter' && load()} placeholder="Rechercher manuels, tech, mobilier..." /></div><div className="filters">{filters.map(f => <button className={'filter-pill ' + (category === f[0] ? 'active' : '')} key={f[0]} onClick={() => setCategory(f[0])}><Icon type={f[2]} size={15} /> {f[1]}</button>)}</div></div><div className="section-title"><div><h2>De ton université</h2><p>Priorité au campus de ton compte</p></div></div>{loading ? <div className="loading panel">Nous préparons les annonces pour toi…</div> : <><div className="grid-list">{items.slice(0, visibleCount).map(item => <button className="card listing-card" key={item.id} onClick={() => go('detail', item)}><div className={'product-art ' + item.categorie}>{item.photos?.[0] ? <img className="product-photo" src={item.photos[0]} alt={item.titre} loading="lazy" decoding="async" /> : <Icon type={item.categorie === 'tech' ? 'laptop' : 'book'} size={44} />}</div><div className="card-body"><div className="price">{money(item.prix_fc)}</div><div className="title">{item.titre}</div><div className="meta">{item.vendeur?.institution?.nom || 'Institution'}</div><div className="meta seller-mini"><Avatar user={item.vendeur} mini /> {label(item.vendeur)}</div></div></button>)}</div>{visibleCount < items.length && <div ref={moreRef} className="loading" role="status">Chargement d’autres annonces…</div>}</>}</>;
 }
+function GoogleAuthButton({ mode, institutionId, onLogin, go, toast, setError, setBusy }) {
+  const container = useRef(null);
+  const completeGoogleLogin = useRef(null);
+  const register = mode === 'register';
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+  completeGoogleLogin.current = async credential => {
+    if (register && !institutionId) {
+      const message = 'Choisis ton institution avant de continuer avec Google.';
+      setError(message);
+      toast(message);
+      return;
+    }
+
+    setBusy(true);
+    setError('');
+    try {
+      const body = { id_token: credential, mode: register ? 'inscription' : 'connexion' };
+      if (register) body.institution_id = institutionId;
+      const data = await api('/auth/google', { method: 'POST', body });
+      if (!data?.token || !data?.utilisateur) throw new Error('Réponse serveur incomplète. Réessaie dans un instant.');
+      setSession(data);
+      onLogin(getUser());
+      toast(register ? 'Compte créé et adresse Google vérifiée.' : 'Connexion Google réussie.');
+      go('home');
+    } catch (error) {
+      setError(error.message);
+      toast(error.message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!clientId || !container.current) return;
+    let disposed = false;
+    const renderButton = () => {
+      if (disposed || !container.current || !window.google?.accounts?.id) return;
+      container.current.replaceChildren();
+      window.google.accounts.id.initialize({
+        client_id: clientId,
+        callback: response => {
+          if (response.credential) completeGoogleLogin.current?.(response.credential);
+        },
+        ux_mode: 'popup',
+      });
+      window.google.accounts.id.renderButton(container.current, {
+        type: 'standard',
+        theme: 'outline',
+        size: 'large',
+        text: 'continue_with',
+        shape: 'rectangular',
+        width: Math.min(container.current.clientWidth || 360, 400),
+        locale: 'fr',
+      });
+    };
+    let script = document.querySelector('script[data-etuvendo-google]');
+    if (!script) {
+      script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.dataset.etuvendoGoogle = 'true';
+      script.addEventListener('load', renderButton);
+      document.head.appendChild(script);
+    } else if (window.google?.accounts?.id) {
+      renderButton();
+    } else {
+      script.addEventListener('load', renderButton);
+    }
+    return () => {
+      disposed = true;
+      script?.removeEventListener('load', renderButton);
+    };
+  }, [clientId, register, institutionId]);
+
+  if (!clientId) return null;
+  return <div className="google-auth-area"><div className="auth-divider"><span>ou</span></div><div className="google-auth-button" ref={container} /></div>;
+}
+
 function Auth({ mode, schools, go, onLogin, toast }) {
   const register = mode === 'register';
   const [showPassword, setShowPassword] = useState(false);
@@ -54,7 +134,7 @@ function Auth({ mode, schools, go, onLogin, toast }) {
       setSession(data); onLogin(getUser()); toast(register ? 'Compte créé' : 'Connexion réussie'); go(register ? 'otp' : 'home', register ? { otp_demo: data.otp_demo } : undefined);
     } catch (requestError) { setError(requestError.message); toast(requestError.message); } finally { setBusy(false); }
   }
-  return <main className="auth-wrap"><section className="auth-card"><div className="logo-lockup"><img src={logo} alt="EtuVendo" /><div className="brand-title"><strong>EtuVendo</strong><span>{register ? 'Inscription campus' : 'Connexion sécurisée'}</span></div></div><h1>{register ? 'Crée ton compte' : 'Content de te revoir'}</h1><p className="auth-intro">{register ? 'Rejoins les étudiants de ton campus.' : 'Connecte-toi pour retrouver tes annonces et tes messages.'}</p>{error && <div className="form-error" role="alert">{error}</div>}<form className="form" onSubmit={submit}>{register && <div className="form-row"><label htmlFor="auth-name">Nom complet</label><input id="auth-name" className="input" name="nom" autoComplete="name" required value={form.nom} onChange={update} /></div>}<div className="form-row"><label htmlFor="auth-email">Adresse email</label><input id="auth-email" className="input" type="email" name="email" autoComplete="email" required value={form.email} onChange={update} /></div><div className="form-row"><label htmlFor="auth-password">Mot de passe</label><div className="password-field"><input id="auth-password" className="input" type={showPassword ? 'text' : 'password'} name="mot_de_passe" autoComplete={register ? 'new-password' : 'current-password'} minLength="8" required value={form.mot_de_passe} onChange={update} /><button type="button" className="password-toggle" onClick={() => setShowPassword(value => !value)} aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}>{showPassword ? <EyeOff size={19} /> : <Eye size={19} />}</button></div></div>{register && <div className="form-row"><label htmlFor="auth-institution">Institution</label><select id="auth-institution" className="select" name="institution_id" value={form.institution_id} onChange={update} required disabled={!schools.length}><option value="">{schools.length ? 'Choisir ton institution' : 'Chargement des institutions…'}</option>{schools.map(s => <option value={s.id} key={s.id}>{s.nom} - {s.ville}</option>)}</select></div>}<button className="btn btn-primary auth-submit" disabled={busy || (register && !schools.length)}>{busy ? 'Veuillez patienter…' : register ? 'Créer mon compte' : 'Se connecter'}</button></form><p className="switch-auth"><button className="link-btn" onClick={() => go(register ? 'login' : 'register')}>{register ? 'J’ai déjà un compte' : 'Créer un compte'}</button></p></section></main>;
+  return <main className="auth-wrap"><section className="auth-card"><div className="logo-lockup"><img src={logo} alt="EtuVendo" /><div className="brand-title"><strong>EtuVendo</strong><span>{register ? 'Inscription campus' : 'Connexion sécurisée'}</span></div></div><h1>{register ? 'Crée ton compte' : 'Content de te revoir'}</h1><p className="auth-intro">{register ? 'Rejoins les étudiants de ton campus.' : 'Connecte-toi pour retrouver tes annonces et tes messages.'}</p>{error && <div className="form-error" role="alert">{error}</div>}<form className="form" onSubmit={submit}>{register && <div className="form-row"><label htmlFor="auth-name">Nom complet</label><input id="auth-name" className="input" name="nom" autoComplete="name" required value={form.nom} onChange={update} /></div>}<div className="form-row"><label htmlFor="auth-email">Adresse email</label><input id="auth-email" className="input" type="email" name="email" autoComplete="email" required value={form.email} onChange={update} /></div><div className="form-row"><label htmlFor="auth-password">Mot de passe</label><div className="password-field"><input id="auth-password" className="input" type={showPassword ? 'text' : 'password'} name="mot_de_passe" autoComplete={register ? 'new-password' : 'current-password'} minLength="8" required value={form.mot_de_passe} onChange={update} /><button type="button" className="password-toggle" onClick={() => setShowPassword(value => !value)} aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}>{showPassword ? <EyeOff size={19} /> : <Eye size={19} />}</button></div></div>{register && <div className="form-row"><label htmlFor="auth-institution">Institution</label><select id="auth-institution" className="select" name="institution_id" value={form.institution_id} onChange={update} required disabled={!schools.length}><option value="">{schools.length ? 'Choisir ton institution' : 'Chargement des institutions…'}</option>{schools.map(s => <option value={s.id} key={s.id}>{s.nom} - {s.ville}</option>)}</select></div>}<button className="btn btn-primary auth-submit" disabled={busy || (register && !schools.length)}>{busy ? 'Veuillez patienter…' : register ? 'Créer mon compte' : 'Se connecter'}</button></form><GoogleAuthButton mode={mode} institutionId={form.institution_id} onLogin={onLogin} go={go} toast={toast} setError={setError} setBusy={setBusy} /><p className="switch-auth"><button className="link-btn" onClick={() => go(register ? 'login' : 'register')}>{register ? 'J’ai déjà un compte' : 'Créer un compte'}</button></p></section></main>;
 }
 function Otp({ user, demo, go, onLogin, toast }) {
   const [digits, setDigits] = useState(['', '', '', '', '', '']);

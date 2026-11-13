@@ -112,6 +112,11 @@ label { font-weight: 800; font-size: 13px; }
 .form .input:focus, .form .textarea:focus, .form .select:focus { background: #fff; }
 .auth-submit { width: 100%; margin-top: 4px; }
 .switch-auth { margin-top: 14px; text-align: center; color: var(--muted); }
+.google-auth-area { display: grid; gap: 12px; margin-top: 16px; }
+.auth-divider { display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: 12px; }
+.auth-divider::before, .auth-divider::after { content: ''; height: 1px; flex: 1; background: rgba(196,197,213,.75); }
+.google-auth-button { display: flex; justify-content: center; min-height: 42px; }
+.google-auth-button > div { max-width: 100%; }
 .link-btn { border: 0; background: transparent; color: var(--primary); font-weight: 900; padding: 0; }
 
 .detail-grid { display: grid; gap: 14px; }
