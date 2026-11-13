@@ -1294,6 +1294,13 @@ button:disabled, input:disabled, textarea:disabled, select:disabled { cursor: no
   .grid-list { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px; }
 }
 
+/* Sur ordinateur, le carrousel est une image de fond pleine bannière.
+   Annule les dimensions fixes héritées du mode carrousel en colonne mobile. */
+@media (min-width: 760px) {
+  .hero-slideshow { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0; }
+  .hero-slideshow img { display: block; width: 100%; height: 100%; min-width: 100%; min-height: 100%; object-fit: cover; object-position: center; }
+}
+
 /* Messages globaux : largeur stable et texte lisible sur les petits écrans. */
 .toast {
   left: 50%;
