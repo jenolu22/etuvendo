@@ -1334,12 +1334,15 @@ button:disabled, input:disabled, textarea:disabled, select:disabled { cursor: no
   height: 52px;
 }
 
-.searchbox .icon {
+.searchbox > svg {
+  position: absolute;
   z-index: 1;
   top: 50%;
-  left: 15px;
+  left: 16px;
   width: 19px;
   height: 19px;
+  color: var(--muted);
+  transform: translateY(-50%);
   pointer-events: none;
 }
 
