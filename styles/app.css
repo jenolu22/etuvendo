@@ -1320,6 +1320,57 @@ button:disabled, input:disabled, textarea:disabled, select:disabled { cursor: no
   overflow-wrap: anywhere;
   box-shadow: 0 12px 32px rgba(17,27,52,.28);
 }
+
+/* Barre de recherche: garde l’icône centrée dans le champ sur toutes les largeurs. */
+.toolbar {
+  min-width: 0;
+}
+
+.searchbox {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  height: 52px;
+}
+
+.searchbox .icon {
+  z-index: 1;
+  top: 50%;
+  left: 15px;
+  width: 19px;
+  height: 19px;
+  pointer-events: none;
+}
+
+.searchbox .input {
+  height: 100%;
+  min-height: 52px;
+  padding-left: 48px;
+}
+
+@media (min-width: 760px) {
+  .toolbar {
+    grid-template-columns: minmax(260px, 1fr) auto;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .filters {
+    min-width: 0;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 759px) {
+  .toolbar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .filters {
+    width: 100%;
+  }
+}
 .form-error, .error-box {
   width: 100%;
   max-width: 100%;
